@@ -23,4 +23,3 @@ async def read_all_books(book_title:str):
         # casefold makes string lowercase
         if book.get('title').casefold()==book_title.casefold():
             return book
-#  Query Parameters
