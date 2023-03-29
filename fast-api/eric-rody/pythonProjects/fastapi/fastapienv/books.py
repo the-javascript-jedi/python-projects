@@ -9,6 +9,8 @@ BOOKS=[
     {'title': 'Title Four', 'author': "Author Four", "category": "math"},
     {'title': 'Title Five', 'author': "Author Five", "category": "math"},
     {'title': 'Title Six', 'author': "Author Six", "category": "math"},
+    {'title': 'Title Seven', 'author': "Author Six", "category": "english"},
+    {'title': 'Title Eight', 'author': "Author Six", "category": "tamil"},
 ]
 # if api endpoint is repeated make sure the dynamic param is below the static param or the static value will never get executed
 
@@ -52,3 +54,46 @@ async def read_author_category_by_query(book_author:str,category:str):
 @app.post("/books/create_book")
 async def create_book(new_book=Body()):
     BOOKS.append(new_book)
+
+# update or change the book
+@app.put("/book/update_book")
+async def update_book(updated_book=Body()):
+    # when title matches update the book
+    for i in range(len(BOOKS)):
+        if BOOKS[i].get('title').casefold()==updated_book.get('title').casefold():
+            BOOKS[i]=updated_book
+
+# delete books
+@app.delete("/books/delete_book/{book_title}")
+async def delete_book(book_title:str):
+    for i in range(len(BOOKS)):
+        if BOOKS[i].get('title').casefold()==book_title.casefold():
+            BOOKS.pop(i)
+            break
+
+# assignment solution - using path params
+@app.get("/books/fetch_books_by_author_path/{author_name}")
+# http://127.0.0.1:8000/books/fetch_books_by_author_path/author%20six
+async def fetch_books_by_author_path(author_name:str):
+    books_to_return = []
+    for book in BOOKS:
+        # add \ after and due to line break
+        if book.get('author').casefold() == author_name.casefold():
+            books_to_return.append(book)
+    return books_to_return
+
+# assignment solution - using query params
+# this will cause issue because this name will clash with already existing dynamic params
+#  solution is to move up or change the route path
+#  order is important in fast api
+@app.get("/books/fetch/fetch_books_by_author_query/")
+# http://127.0.0.1:8000/books/fetch/fetch_books_by_author_query/?author_name_query=author%20six
+async def fetch_books_by_author_query(author_name_query:str):
+    print("author_name_query",author_name_query)
+    books_to_return = []
+    for book in BOOKS:
+        # add \ after and due to line break
+        if book.get('author').casefold() == author_name_query.casefold():
+            books_to_return.append(book)
+    print('books_to_return',books_to_return)
+    return books_to_return
