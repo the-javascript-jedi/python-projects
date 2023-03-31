@@ -14,34 +14,65 @@ class Book:
     author:str
     description:str
     rating:int
+    published_date: int
 
-    def __init__(self,id,title,author,description,rating):
+    def __init__(self,id,title,author,description,rating,published_date):
         self.id=id
         self.title=title
         self.author=author
         self.description=description
         self.rating=rating
+        self.published_date=published_date
 # pydantic class for validation
 # import the basemode
 class Bookrequest(BaseModel):
-    id:Optional[int] #Optional means it can be a number or null
+    id:Optional[int]=Field(title='id is not needed') #Optional means it can be a number or null
     title:str=Field(min_length=3)
     author:str=Field(min_length=1)
     description:str=Field(min_length=1,max_length=100)
     rating:int=Field(gt=0,lt=6)
+    published_date:int=Field(gt=1999,lt=2031)
+    # an example schema - specified inside the Bookrequest class
+    class Config:
+        schema_extra = {
+            'example': {
+                'title': 'A new Book',
+                'author': 'codingwithroby',
+                'author': 'codingwithroby',
+                'description': 'A new description of a new book',
+                'rating': 5,
+                'published_date':2012
+            }
+        }
 
 BOOKS=[
-    Book(1,'Computer Science Pro','codingwithroby','A very nice book!',5),
-    Book(2, 'Be Fast with FastAPI', 'codingwithroby', 'A great book!', 5),
-    Book(3, 'Master Endpoints', 'codingwithroby', 'An awesome book', 5),
-    Book(4, 'HP1', 'Author 1', 'Book Description', 2),
-    Book(5, 'HP2', 'Author 2', 'Book Description', 3),
-    Book(6, 'HP3', 'Author 3', 'Book Description', 1),
+    Book(1,'Computer Science Pro','codingwithroby','A very nice book!',5,2007),
+    Book(2, 'Be Fast with FastAPI', 'codingwithroby', 'A great book!', 5,2007),
+    Book(3, 'Master Endpoints', 'codingwithroby', 'An awesome book', 5,2009),
+    Book(4, 'HP1', 'Author 1', 'Book Description', 2,2009),
+    Book(5, 'HP2', 'Author 2', 'Book Description', 3,2012),
+    Book(6, 'HP3', 'Author 3', 'Book Description', 1,2016),
 ]
 
 @app.get("/books")
 async def read_all_books():
     return BOOKS
+# find book by id - using path params
+@app.get("/books/{book_id}")
+# http://127.0.0.1:8000/books/1
+async def read_book(book_id:int):
+    for book in BOOKS:
+        if book.id==book_id:
+            return book
+#  find book by rating - using query params
+@app.get("/books/")
+#  http://127.0.0.1:8000/books/?book_rating=5
+async def read_book_by_rating(book_rating:int):
+    books_to_return=[]
+    for book in BOOKS:
+        if book.rating==book_rating:
+            books_to_return.append(book)
+    return books_to_return
 
 @app.post ("/create-book")
 # use pyDantic class for type validation
@@ -65,3 +96,28 @@ def find_book_id(book:Book):
     # ternary operator
     book.id=1 if len(BOOKS)==0 else BOOKS[-1].id+1
     return book
+
+# update book with PUT request
+@app.put("/books/update_book")
+async def update_book(book:Bookrequest):
+    for i in range(len(BOOKS)):
+        if(BOOKS[i]).id==book.id:
+            BOOKS[i]=book
+
+#delete book
+@app.delete("/books/{book_id}")
+async def delete_book(book_id:int):
+    for i in range(len(BOOKS)):
+        if(BOOKS[i]).id==book_id:
+            BOOKS.pop(i)
+            break
+
+# filter by published data - using path parameters
+@app.get("/books/filter/{published_date}")
+async def filter_by_date(published_date:int):
+    print("published_date",published_date)
+    books_to_return = []
+    for book in BOOKS:
+        if book.published_date == published_date:
+            books_to_return.append(book)
+    return books_to_return
