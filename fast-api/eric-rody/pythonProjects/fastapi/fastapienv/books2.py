@@ -6,6 +6,8 @@ from fastapi import FastAPI,Body,Path,Query, HTTPException
 # pydantic used for data validation comes with fast api
 # import Field to add validation for each field
 from pydantic import BaseModel,Field
+# starlette will provide us explicit code responses
+from starlette import status
 
 
 app=FastAPI()
@@ -56,11 +58,11 @@ BOOKS=[
     Book(6, 'HP3', 'Author 3', 'Book Description', 1,2016),
 ]
 
-@app.get("/books")
+@app.get("/books",status_code=status.HTTP_200_OK)
 async def read_all_books():
     return BOOKS
 # find book by id - using path params
-@app.get("/books/{book_id}")
+@app.get("/books/{book_id}",status_code=status.HTTP_200_OK)
 # http://127.0.0.1:8000/books/1
 # book_id:int=Path(gt=0) - book_id is a path parameter and it has to be greater than zero
 async def read_book(book_id:int=Path(gt=0)):
@@ -70,7 +72,7 @@ async def read_book(book_id:int=Path(gt=0)):
     # if value is not found raise an exception
     raise HTTPException(status_code=404,detail="Item not found")
 #  find book by rating - using query params
-@app.get("/books/")
+@app.get("/books/",status_code=status.HTTP_200_OK)
 #  http://127.0.0.1:8000/books/?book_rating=5
 # Query(gt=0,lt=6 - Query should be 1 and 5
 async def read_book_by_rating(book_rating:int=Query(gt=0,lt=6)):
@@ -82,7 +84,8 @@ async def read_book_by_rating(book_rating:int=Query(gt=0,lt=6)):
 
 @app.post ("/create-book")
 # use pyDantic class for type validation
-async def create_book(book_request:Bookrequest):
+# 201 - because it is created an object
+async def create_book(book_request:Bookrequest,status_code=status.HTTP_201_CREATED):
     print('type(Bookrequest)--before',type(Bookrequest))
     #print output - <class 'pydantic.main.ModelMetaclass'>
     # **book_request.dict() converts the request to Book object
@@ -104,7 +107,8 @@ def find_book_id(book:Book):
     return book
 
 # update book with PUT request
-@app.put("/books/update_book")
+# updating an app, (204) - since we are not returning anything
+@app.put("/books/update_book",status_code=status.HTTP_204_NO_CONTENT)
 async def update_book(book:Bookrequest):
     book_changed=False
     for i in range(len(BOOKS)):
@@ -117,7 +121,8 @@ async def update_book(book:Bookrequest):
 
 #delete book
 # book_id:int=Path(gt=0)
-@app.delete("/books/{book_id}")
+# updating an app, (204) - since we are not returning anything
+@app.delete("/books/{book_id}",status_code=status.HTTP_204_NO_CONTENT)
 async def delete_book(book_id:int=Path(gt=0)):
     book_changed=False
     for i in range(len(BOOKS)):
@@ -130,7 +135,7 @@ async def delete_book(book_id:int=Path(gt=0)):
         raise HTTPException(status_code=404,detail="Item not found")
 
 # filter by published data - using path parameters
-@app.get("/books/filter/{published_date}")
+@app.get("/books/filter/{published_date}",status_code=status.HTTP_200_OK)
 async def filter_by_date(published_date:int):
     print("published_date",published_date)
     books_to_return = []
