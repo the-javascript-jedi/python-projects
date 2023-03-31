@@ -1,6 +1,8 @@
 from typing import Optional
 #  to run app - uvicorn books2:app --reload
-from fastapi import FastAPI,Body
+# Path is used to validate Path parameters
+# HTTPException will raise an exception and cancel the request
+from fastapi import FastAPI,Body,Path,Query, HTTPException
 # pydantic used for data validation comes with fast api
 # import Field to add validation for each field
 from pydantic import BaseModel,Field
@@ -60,14 +62,18 @@ async def read_all_books():
 # find book by id - using path params
 @app.get("/books/{book_id}")
 # http://127.0.0.1:8000/books/1
-async def read_book(book_id:int):
+# book_id:int=Path(gt=0) - book_id is a path parameter and it has to be greater than zero
+async def read_book(book_id:int=Path(gt=0)):
     for book in BOOKS:
         if book.id==book_id:
             return book
+    # if value is not found raise an exception
+    raise HTTPException(status_code=404,detail="Item not found")
 #  find book by rating - using query params
 @app.get("/books/")
 #  http://127.0.0.1:8000/books/?book_rating=5
-async def read_book_by_rating(book_rating:int):
+# Query(gt=0,lt=6 - Query should be 1 and 5
+async def read_book_by_rating(book_rating:int=Query(gt=0,lt=6)):
     books_to_return=[]
     for book in BOOKS:
         if book.rating==book_rating:
@@ -100,17 +106,28 @@ def find_book_id(book:Book):
 # update book with PUT request
 @app.put("/books/update_book")
 async def update_book(book:Bookrequest):
+    book_changed=False
     for i in range(len(BOOKS)):
         if(BOOKS[i]).id==book.id:
             BOOKS[i]=book
+            book_changed=True
+    # if value is not found raise an exception
+    if not book_changed:
+        raise HTTPException(status_code=404,detail="Item not found")
 
 #delete book
+# book_id:int=Path(gt=0)
 @app.delete("/books/{book_id}")
-async def delete_book(book_id:int):
+async def delete_book(book_id:int=Path(gt=0)):
+    book_changed=False
     for i in range(len(BOOKS)):
         if(BOOKS[i]).id==book_id:
             BOOKS.pop(i)
+            book_changed = True
             break
+    # if value is not found raise an exception
+    if not book_changed:
+        raise HTTPException(status_code=404,detail="Item not found")
 
 # filter by published data - using path parameters
 @app.get("/books/filter/{published_date}")
