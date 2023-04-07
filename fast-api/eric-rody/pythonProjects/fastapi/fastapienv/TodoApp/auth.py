@@ -1,4 +1,4 @@
-# uvicorn auth:app --reload
+#  uvicorn auth:app --reload --port 9000
 
 from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
@@ -11,7 +11,7 @@ from database import SessionLocal, engine
 # authentication security
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2AuthorizationCodeBearer,OAuth2PasswordBearer
 from datetime import datetime,timedelta
-from jose import jwt
+from jose import jwt,JWTError
 
 # secret key for jwt
 SECRET_KEY="secret_key_test"
@@ -84,6 +84,20 @@ async def create_new_user(create_user:CreateUser,db:Session=Depends(get_db)):
     db.add(create_user_model)
     db.commit()
 
+async def get_current_user(token:str=Depends(oauth2_bearer)):
+    try:
+        payload=jwt.decode(token,SECRET_KEY,algorithms=[ALGORITHM])
+        username:str=payload.get("sub")
+        user_id:int=payload.get("id")
+        if username is None or user_id is None:
+            raise HTTPException(status_code=404,detail="User not found")
+            # raise get_user_exception()
+        return {"username":username,"id":user_id}
+    except JWTError:
+        raise HTTPException(status_code=404,detail="User not found")
+        # raise get_user_exception()
+
+
 # create a token , this token will be used to make future valid requests
 @app.post("/token")
 async def login_for_access_token(form_data:OAuth2PasswordRequestForm=Depends(),
@@ -91,13 +105,27 @@ async def login_for_access_token(form_data:OAuth2PasswordRequestForm=Depends(),
     user=authenticate_user(form_data.username,form_data.password,db)
     print("user",user)
     if not user:
-        raise HTTPException(status_code=404,detail="User not found")
+        # raise HTTPException(status_code=404,detail="User not found")
+        raise token_exception()
     # create token
     token_expires = timedelta(minutes=20)
     token=create_access_token(user.username,user.id,expires_delta=token_expires)
     # "User Validated" - return token
     return {"token":token}
 
+# Exceptions
+def get_user_exception():
+    credentials_exception=HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate":"Bearer"}
+    )
+    return credentials_exception
 
-
-
+def token_exception():
+    token_exception_response=HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Incorrect username or assword",
+        headers = {"WWW-Authenticate": "Bearer"}
+    )
+    return token_exception_response
