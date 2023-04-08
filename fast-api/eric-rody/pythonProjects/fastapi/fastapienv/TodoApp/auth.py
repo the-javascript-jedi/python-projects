@@ -12,6 +12,7 @@ from database import SessionLocal, engine
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2AuthorizationCodeBearer,OAuth2PasswordBearer
 from datetime import datetime,timedelta
 from jose import jwt,JWTError
+from starlette import status
 
 # secret key for jwt
 SECRET_KEY="secret_key_test"
