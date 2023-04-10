@@ -5,11 +5,15 @@ from database import engine,SessionLocal
 from sqlalchemy.orm import Session
 from pydantic import BaseModel,Field
 from typing import Optional
-from auth import get_current_user,get_user_exception
+from routers.auth import get_current_user,get_user_exception
+# import router file
+from routers import auth
 
 app=FastAPI()
 
 models.Base.metadata.create_all(bind=engine)
+# include the auth file
+app.include_router(auth.router)
 
 # create new function to get db
 def get_db():

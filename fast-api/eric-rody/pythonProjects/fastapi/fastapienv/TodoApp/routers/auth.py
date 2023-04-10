@@ -1,6 +1,9 @@
 #  uvicorn auth:app --reload --port 9000
+import sys
+# since router needs to access other files in directory we use this hack
+sys.path.append("..")
 
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException , status,APIRouter
 from pydantic import BaseModel
 from typing import Optional
 import models
@@ -32,7 +35,11 @@ models.Base.metadata.create_all(bind=engine)
 # bearer token
 oauth2_bearer=OAuth2PasswordBearer(tokenUrl="token")
 
-app = FastAPI()
+# without routing
+# app = FastAPI()
+
+# with routing - below code
+router = APIRouter()
 
 def get_db():
     try:
@@ -69,7 +76,7 @@ def create_access_token(username:str,user_id:int,expires_delta:Optional[timedelt
     # create encoded access token
     return jwt.encode(encode,SECRET_KEY,algorithm=ALGORITHM)
 
-@app.post("/create/user")
+@router.post("/create/user")
 async def create_new_user(create_user:CreateUser,db:Session=Depends(get_db)):
     create_user_model=models.Users()
     create_user_model.email=create_user.email
@@ -100,7 +107,7 @@ async def get_current_user(token:str=Depends(oauth2_bearer)):
 
 
 # create a token , this token will be used to make future valid requests
-@app.post("/token")
+@router.post("/token")
 async def login_for_access_token(form_data:OAuth2PasswordRequestForm=Depends(),
                                  db:Session=Depends(get_db)):
     user=authenticate_user(form_data.username,form_data.password,db)
