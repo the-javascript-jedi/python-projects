@@ -130,3 +130,4 @@ def token_exception():
         headers = {"WWW-Authenticate": "Bearer"}
     )
     return token_exception_response
+
