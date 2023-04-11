@@ -39,7 +39,11 @@ oauth2_bearer=OAuth2PasswordBearer(tokenUrl="token")
 # app = FastAPI()
 
 # with routing - below code
-router = APIRouter()
+router = APIRouter(
+    prefix="/auth",
+    tags=["auth"],
+    responses={401:{"user":"Not authorized"}}
+)
 
 def get_db():
     try:
