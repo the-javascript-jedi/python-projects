@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="5a661b84-6ec1-4bee-b958-aaaf9359f31c" name="Changes" comment="" />
+    <list default="true" id="5a661b84-6ec1-4bee-b958-aaaf9359f31c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../../../catalin-stefan/fastapi-practice/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -19,7 +25,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "G:/Nithin Samuel/Learning/nithin-repos/python-projects/fast-api/eric-rody/pythonProjects/fastapi/fastapienv",
+    "last_opened_file_path": "G:/Nithin Samuel/Learning/nithin-repos/python-projects/fast-api/catalin-stefan",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
