@@ -1,0 +1,6 @@
+username=input('Enter Username')
+password=input("Enter password")
+passwordLength=len(password)
+secret=('*'*passwordLength)
+print('secret',secret)
+print(f'{username}, your password {secret} is {passwordLength} letters long')
