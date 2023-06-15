@@ -1,0 +1,7 @@
+../build
+../dist
+./build
+./dist
+./Lib
+./Scripts
+./Include
