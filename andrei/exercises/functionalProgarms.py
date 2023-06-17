@@ -20,10 +20,30 @@
 
 
 # reduce
-from functools import reduce
-my_list=[1,2,3]
-def accumulator(acc,item):
-    print(acc,item)
-    return acc+item
+# from functools import reduce
+# my_list=[1,2,3]
+# def accumulator(acc,item):
+#     print(acc,item)
+#     return acc+item
+#
+# print(reduce(accumulator,my_list,0))
 
-print(reduce(accumulator,my_list,0))
+# # lambda expressions - map
+# my_list=[1,2,3]
+# print(list(map(lambda item:item*2,my_list)))
+
+# # lambda expressions - filter
+my_list=[1,2,3]
+print(list(filter(lambda item:item%2,my_list)))
+print(my_list)
+
+# # lambda expressions - reduce
+# from functools import reduce
+# my_list=[1,2,3]
+# def accumulator(acc,item):
+#     print(acc,item)
+#     return acc+item
+#
+# print(reduce(lambda acc,item:acc+item,my_list))
+# print(my_list)
+
