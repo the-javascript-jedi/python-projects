@@ -2,6 +2,7 @@ from fastapi import APIRouter,Depends
 from typing import List
 from db import db_user
 from db.database import get_db
+from db.models import DbUser
 from schemas import UserBase,UserDisplay
 from sqlalchemy.orm import Session
 
@@ -33,3 +34,8 @@ def get_user(id:int,db:Session=Depends(get_db)):
 @router.post("/{id}/update")
 def update_user(id:int,request:UserBase,db:Session=Depends(get_db)):
     return db_user.update_user(db,id,request)
+
+# Delete user
+@router.get('/delete/{id}')
+def delete(id:int,db:Session=Depends(get_db)):
+    return db_user.delete_user(db,id)
