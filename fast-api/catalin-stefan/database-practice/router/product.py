@@ -25,6 +25,28 @@ def get_products(response:Response,custom_header:Optional[List[str]]=Header(None
     response.headers['custom_response_header']=", ".join(custom_header)
     return products
 
+# read the cookie
+@router.get("/withheaderCookie")
+def get_products(response:Response,custom_header:Optional[List[str]]=Header(None), test_cookie:Optional[str]=Cookie(None)):
+  if custom_header:
+    response.headers['custom_response_header']=", ".join(custom_header)
+
+  return {
+      'data':products,
+      'custom_header':custom_header,
+      'test_cookie':test_cookie
+  }
+#Create the cookie
+@router.get("/allWithCookie")
+def get_all_products_with_cookie():
+  # return products
+  data = " ".join(products)
+  response = Response(content=data, media_type="text/plain")
+  response.set_cookie(key="test_cookie",value="test_cookie_value")
+  return response
+
+
+
 @router.get('/{id}', responses={
   200: {
     "content": {
