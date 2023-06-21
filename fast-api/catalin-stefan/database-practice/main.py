@@ -1,5 +1,3 @@
-from email.policy import HTTP
-
 from fastapi import FastAPI, HTTPException
 
 from exceptions import StoryException
@@ -14,6 +12,7 @@ from db.database import engine
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from fastapi.responses import PlainTextResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 app=FastAPI()
 app.include_router(user.router)
@@ -38,3 +37,17 @@ def custom_handler(request:Request,exc:StoryException):
     return PlainTextResponse(str(exc),status_code=400)
 
 models.Base.metadata.create_all(engine)
+
+# origins paths
+origins=[
+    "http://localhost:3000"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=["*"],
+    # allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
