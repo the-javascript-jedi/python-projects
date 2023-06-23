@@ -1,3 +1,5 @@
+# uvicorn main:app --port 8001  --reload
+#  http://127.0.0.1:8001/docs
 from typing import Optional
 from fastapi import FastAPI, Request
 from router import blog_get, blog_post, user, article, product
@@ -35,7 +37,9 @@ def story_exception_handler(request: Request, exc: StoryException):
 models.Base.metadata.create_all(engine)
 
 origins = [
-  'http://localhost:3000'
+  'http://localhost:3000',
+  'http://127.0.0.1:5500',
+  'http://localhost:4200'
 ]
 
 app.add_middleware(
