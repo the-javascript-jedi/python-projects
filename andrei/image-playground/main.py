@@ -33,3 +33,8 @@ cropped.save("cropped.png","png")
 
 # display the image
 # filtered_img.show()
+
+# creating a thumbnail
+imageToConvert=Image.open("./Pokedex/bulbasaur.jpg")
+img.thumbnail((200,200))
+img.save('thumbnail.jpg')
