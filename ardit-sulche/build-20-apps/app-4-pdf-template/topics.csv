@@ -1,0 +1,40 @@
+Order,Topic,Pages
+1,Variables,2
+2,Lists,3
+3,Functions,3
+4,While-loop,2
+5,Methods,3
+6,Match-case,2
+7,For-loop,3
+8,Type-conversion,2
+9,List Indices,2
+10,Tuples,2
+11,Enumerate,2
+12,F-Strings,2
+13,"Write Text Files, Read Text Files",3
+14,File Paths,2
+15,List Comprehensions,2
+16,Comments,2
+17,With-Context Manager,2
+18,"If, Elif, and Else Conditionals",3
+19,Slicing,2
+20,Dictionaries,3
+21,Try-Except and Exceptions,2
+22,Continue Statement,2
+23,Custom Functions,4
+24,Function Arguments,2
+25,Multiple Arguments,2
+26,Decoupling Output,2
+27,Default Arguments,2
+28,Doc Strings,2
+29,Decoupling Functions,2
+30,Local Modules and Import,2
+31,Standard Modules,2
+32,Git and Github,4
+33,Third-Party Modules,2
+34,GUI,2
+35,Web Development with Streamlit,6
+36,Heroku Deployment,2
+37,PDF Generation with PdfKit,4
+38,Data Handling with Pandas,6
+39,Sending Emails,4
