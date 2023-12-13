@@ -26,7 +26,7 @@ for filepath in filepaths:
         print(content)
         pdf.set_font(family="Times", size=16, style="B")
         # pdf.cell(w=50, h=8, txt=content, ln=1)
-        pdf.multi_cell(0, 10, content)
-
+        # pdf.multi_cell(0, 10, content)
+        pdf.multi_cell(w=0,h=15,txt=content)
 # Produce the PDF
 pdf.output("output.pdf")
