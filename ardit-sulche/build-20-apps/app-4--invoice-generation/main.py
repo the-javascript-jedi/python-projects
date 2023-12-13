@@ -16,7 +16,15 @@ for filepath in filepaths:
     # excel name - 10001-2023.1.18.xlsx
     # using Path we can form an intelligent string, in this string .stem
     filename=Path(filepath).stem
-    invoice_nr=filename.split("-")[0]
+    invoice_nr,date=filename.split("-")
+
+    # invoice number
     pdf.set_font(family="Times",size=16,style="B")
-    pdf.cell(w=50,h=8,txt=f"Invoice nr.{invoice_nr}")
+    # ln=1 will break the line
+    pdf.cell(w=50,h=8,txt=f"Invoice nr.{invoice_nr}",ln=1)
+
+    # date
+    pdf.set_font(family="Times", size=16, style="B")
+    pdf.cell(w=50, h=8, txt=f"Date:{date}")
+
     pdf.output(f"PDFs/{filename}.pdf")
