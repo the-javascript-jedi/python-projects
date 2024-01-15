@@ -72,3 +72,29 @@ POST /products/_update/100
   }
 }
 
+//upsert
+POST /products/_update/101
+{
+  "script":{
+    "source":"ctx._source.in_stock++"
+  },
+  "upsert":{
+    "name":"Blender",
+    "price":399,
+    "in_stock":5
+  }
+}
+
+//replacing
+PUT /products/_doc/100
+{
+  "name":"Toaster",
+  "price":79,
+  "in_stock":4
+}
+
+//retreiving documents
+GET /products/_doc/100
+
+//deleting documents
+DELETE /products/_doc/101
