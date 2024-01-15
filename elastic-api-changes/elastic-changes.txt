@@ -1,0 +1,74 @@
+//creating indexes
+PUT /products
+{
+  "settings": {
+    "number_of_shards": 2,
+    "number_of_replicas": 2
+  }
+}
+
+//deleting indexes
+DELETE /pages
+
+// inserting documents
+POST /products/_doc
+{
+  "name":"Coffee Maker",
+  "price":64,
+  "in_stock":10
+}
+
+PUT /products/_doc/100
+{
+  "name":"Toaster",
+  "price":49,
+  "in_stock":4
+}
+
+//retreiving documents
+GET /products/_doc/100
+
+//update  documents -- existing field
+POST /products/_update/100
+{
+  "doc":{
+    "in_stock":3
+  }
+}
+
+//update documents -- add a new field
+POST /products/_update/100
+{
+  "doc":{
+    "tags":["electronics"]
+  }
+}
+
+//scripting elastic api
+POST /products/_update/100
+{
+  "script": {
+    // reduce the value od in_stock field by 1
+    "source":"ctx._source.in_stock--"
+  }
+}
+
+//scripting elastic api -- assigning values
+POST /products/_update/100
+{
+  "script": {
+    "source":"ctx._source.in_stock=100"
+  }
+}
+
+//scripting elastic api -- params
+POST /products/_update/100
+{
+  "script": {
+    "source":"ctx._source.in_stock-=params.quantity",
+    "params": {
+      "quantity":4
+    }
+  }
+}
+
