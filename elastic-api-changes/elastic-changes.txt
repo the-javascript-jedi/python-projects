@@ -98,3 +98,14 @@ GET /products/_doc/100
 
 //deleting documents
 DELETE /products/_doc/101
+
+//update by query
+POST /products/_update_by_query
+{
+  "script": {
+    "source": "ctx._source.in_stock--"
+  },
+  "query": {
+    "match_all":{}
+  }
+}
