@@ -86,7 +86,7 @@ POST /products/_update/101
 }
 
 //replacing
-PUT /products/_doc/100
+PUT /products/_doc/101
 {
   "name":"Toaster",
   "price":79,
@@ -107,5 +107,24 @@ POST /products/_update_by_query
   },
   "query": {
     "match_all":{}
+  }
+}
+
+//get all docs
+GET /products/_search
+{
+  "query":{
+    "match_all": {}
+  
+  }
+}
+
+//delete by query
+POST /products/_delete_by_query
+{
+  "query":{
+    "match_all":{
+      
+    }
   }
 }
