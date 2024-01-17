@@ -128,3 +128,18 @@ POST /products/_delete_by_query
     }
   }
 }
+
+//index will not fail if document already exists, it will be replaced
+//create will fail if document already exists
+POST /_bulk
+{"index":{"_index":"products","_id":200}}
+{"name":"Espresso Machine","price":199,"in_stock":5}
+{"create":{"_index":"products","_id":201}}
+{"name":"Milk Frother","price":149,"in_stock":14}
+
+
+//update doc with id 201 and delete the document with id 200 using batch processing
+POST /products/_bulk
+{"update":{"_id":201}}
+{"doc":{"price":129}}
+{"delete":{"_id":200}}
