@@ -95,7 +95,7 @@ PUT /products/_doc/101
 
 //retreiving documents
 GET /products/_doc/100
-
+GET /products_new
 //deleting documents
 DELETE /products/_doc/101
 
@@ -111,7 +111,7 @@ POST /products/_update_by_query
 }
 
 //get all docs
-GET /products/_search
+GET /products-new/_search
 {
   "query":{
     "match_all": {}
@@ -120,7 +120,7 @@ GET /products/_search
 }
 
 //delete by query
-POST /products/_delete_by_query
+POST /productsn/_delete_by_query
 {
   "query":{
     "match_all":{
@@ -143,3 +143,48 @@ POST /products/_bulk
 {"update":{"_id":201}}
 {"doc":{"price":129}}
 {"delete":{"_id":200}}
+
+//
+GET /products/_search
+{
+  "query":{
+    "match_all": {}
+  
+  }
+}
+
+
+//////////////////////////////////////////////////////////
+//Section 4
+/*/////////////////////////////////////////////////////*/
+POST /_analyze
+{
+  "text":"2 guys walk into a bar, but the third... Ducks! :-)",
+  "analyzer":"standard"
+}
+
+
+POST /_analyze
+{
+  "text":"2 guys walk into a bar, but the third... Ducks! :-)",
+  "char_filter":[],
+  "tokenizer":"standard",
+  "filter":["lowercase"]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
