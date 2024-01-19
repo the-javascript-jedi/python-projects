@@ -191,15 +191,96 @@ PUT /reviews
   }
 }
 
+//Create Document using the mapping
+PUT /reviews/_doc/1
+{
+  "rating":5.0,
+  "content":"Outstanding course",
+  "product_id":123,
+  "author":{
+    "first_name":"John",
+    "last_name":"Doe",
+    "email":"johndoe123@example.com"
+  }
+}
+
+// retrieve mappings for entire index
+GET /reviews/_mapping
+
+// retrieve mappings for entire index
+GET /reviews/_mapping/field/content
 
 
+GET /reviews/_mapping/field/author.email
 
+PUT /reviews/_mapping
+{
+  "properties":{
+    "created_at":{
+      "type":"date"
+    }
+  }
+}
+//string date
+PUT /reviews/_doc/2
+{
+  "rating":4.5,
+  "content":"Not Bad",
+  "product_id":123,
+  "created_at":"2015-03-27",
+  "author":{
+    "first_name":"Average",
+    "last_name":"Joe",
+    "email":"avgjoe@example.com"
+  }
+}
+//utc time 
+PUT /reviews/_doc/3
+{
+  "rating":3.5,
+  "content":"Could be better",
+  "product_id":123,
+  "created_at":"2015-04-15T19:29:32Z",
+  "author":{
+    "first_name":"Spencer",
+    "last_name":"Pearson",
+    "email":"spearson@example.com"
+  }
+}
 
+//utc time --with 1 hour offset 
+PUT /reviews/_doc/4
+{
+  "rating":5.0,
+  "content":"Incredible",
+  "product_id":123,
+  "created_at":"2015-01-28T19:30:03+01:00",
+  "author":{
+    "first_name":"Adam",
+    "last_name":"Jones",
+    "email":"adam.jones@example.com"
+  }
+}
 
+//timestamp in milliseconds --
+PUT /reviews/_doc/5
+{
+  "rating":4.5,
+  "content":"Very Useful",
+  "product_id":123,
+  "created_at":"1705692828",
+  "author":{
+    "first_name":"Taylor",
+    "last_name":"West",
+    "email":"twest@example.com"
+  }
+}
 
-
-
-
-
-
+//Get reviews
+GET /reviews/_search
+{
+  "query":{
+    "match_all": {}
+  }
+}
 
