@@ -172,9 +172,24 @@ POST /_analyze
   "filter":["lowercase"]
 }
 
-
-
-
+//Adding explicit mappings
+PUT /reviews
+{
+  "mappings":{
+    "properties":{
+      "rating":{"type":"float"},
+      "content":{"type":"text"},
+      "product_id":{"type":"integer"},
+      "author":{
+        "properties":{
+          "first_name":{"type":"text"},
+          "last_name":{"type":"text"},
+          "email":{"type":"keyword"}
+        }
+      }
+    }
+  }
+}
 
 
 
