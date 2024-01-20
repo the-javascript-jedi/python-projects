@@ -284,3 +284,119 @@ GET /reviews/_search
   }
 }
 
+//this mapping update will not work and cause error, as field mapping cannot be updated
+PUT /reviews/_mapping
+{
+  "properties":{
+    "product_id":{
+      "type":"keyword"
+    }
+  }
+}
+//we will add the ignore mapping so that parameter abover certaib values will be ignored
+PUT /reviews/_mapping
+{
+  "properties":
+  {
+    "author":{
+      "properties":{
+        "email":{
+          "type":"keyword",
+          "ignore_above":256
+        }
+      }
+    }
+  }
+}
+
+////////////////////////////////////////////////
+// reindexing the documents
+GET /reviews/_mappings
+
+//copy the mappings into a newly created reviews and change the the product_id mapping value type from integer to keyword
+PUT /reviews_new
+{
+  "mappings": {
+      "properties": {
+        "author": {
+          "properties": {
+            "email": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "first_name": {
+              "type": "text"
+            },
+            "last_name": {
+              "type": "text"
+            }
+          }
+        },
+        "content": {
+          "type": "text"
+        },
+        "created_at": {
+          "type": "date"
+        },
+        "product_id": {
+          "type": "integer"
+        },
+        "rating": {
+          "type": "float"
+        }
+      }
+    }
+}
+
+//use the reindex query and transfer the source to destination
+POST /_reindex
+{
+  "source":{
+    "index":"reviews"
+  },
+  "dest":{
+    "index":"reviews_new"
+  }
+}
+
+//check the input
+GET /reviews_new/_search
+{
+  "query":{
+    "match_all":{}
+  }
+}
+//delete the index data inside the reviews_new index
+POST /reviews_new/_delete_by_query
+{
+  "query":{
+   "match_all":{}
+  }
+}
+
+//modifying the data type product_id from integer to string
+POST /_reindex
+{
+  "source":{
+    "index":"reviews"
+  },
+  "dest":{
+    "index":"reviews_new"
+  },
+  "script": {
+    "source":"""
+      if(ctx._source.product_id!=null){
+        ctx._source.product_id=ctx._source.product_id.toString()
+      }
+    """
+  }
+}
+
+
+
+
+
+
+
+
+
