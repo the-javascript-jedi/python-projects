@@ -446,8 +446,32 @@ GET /multi_field_test/_search
   }
 }
 
+// 56) Index Templates
+PUT /_template/access-logs
+{
+  "index_patterns": ["access-logs-*"],
+  "settings":{
+    "number_of_shards": 2,
+    "index.mapping.coerce":false
+  },
+  "mappings":{
+    "properties":{
+      "@timestamp":{
+        "type":"date"
+      },
+      "url.original":{
+        "type":"keyword"
+      },
+      "http.request.referrer":{
+        "type":"keyword"
+      },
+       "http.response.status_code":{
+        "type":"long"
+      }
+    }
+  }
+}
 
+PUT /access-logs-2020-01-01
 
-
-
-
+GET /access-logs-2020-01-01
