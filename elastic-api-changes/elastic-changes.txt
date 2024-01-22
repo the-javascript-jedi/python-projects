@@ -475,3 +475,104 @@ PUT /_template/access-logs
 PUT /access-logs-2020-01-01
 
 GET /access-logs-2020-01-01
+
+GET /products/_mapping
+
+//create a explicit mapping for the people index
+PUT /people
+{
+  "mappings":{
+    "properties":{
+      "first_name":{
+        "type":"text"
+      }
+    }
+  }
+}
+
+//Insert a value to the people index 
+/* the first_name value is mapped 
+ the last_name value is dynamically mapped as wehave not created it originally */
+POST /people/_doc
+{
+  "first_name":"Bo",
+  "last_name": "Anderson"
+}
+
+//Display the mapping
+GET /people/_mapping
+
+// Clean up
+DELETE /people
+
+///////////////////////////////////////
+//create a mapping for the people index with dynamic set to false
+PUT /people
+{
+  "mappings":{
+    "dynamic":false,
+    "properties":{
+      "first_name":{
+        "type":"text"
+      }
+    }
+  }
+}
+
+//Insert a value to the people index 
+/* the first_name value is mapped 
+ the last_name value is not mapped as wehave not created it originally, it will be available in _source to display but will not be queryable */
+POST /people/_doc
+{
+  "first_name":"Bo",
+  "last_name": "Anderson"
+}
+
+//Display the mapping
+GET /people/_mapping
+
+//simple search query search first name
+GET /people/_search
+{
+  "query":{
+    "match":{
+      "first_name":"Bo"
+    }
+  }
+}
+
+//simple search query search last name
+GET /people/_search
+{
+  "query":{
+    "match":{
+      "last_name":"Anderson"
+    }
+  }
+}
+// Clean up
+DELETE /people
+
+///////////////////////////////////////////////////
+// strict mapping
+PUT /people
+{
+  "mappings":{
+    "dynamic":"strict",
+    "properties":{
+      "first_name":{
+        "type":"text"
+      }
+    }
+  }
+}
+
+// this insert will throw an error as last_name is not specified in strict creation
+POST /people/_doc
+{
+  "first_name":"Bo",
+  "last_name": "Anderson"
+}
+
+
+
