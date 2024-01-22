@@ -392,8 +392,59 @@ POST /_reindex
   }
 }
 
+// Section 4  - 55 ) Multi Field Mappings
+PUT /multi_field_test
+{
+  "mappings":{
+    "properties":{
+      "description":{
+        "type":"text"
+      },
+      "ingredients":{
+        "type":"text",
+        "fields":{
+          "keyword":{
+            "type":"keyword"
+          }
+        }
+      }
+    }
+  }
+}
 
+POST /multi_field_test/_doc
+{
+  "description":"TO make this spaghetti carbonara, you first need to",
+  "ingredients":["Spaghetti","Bacon","Eggs"]
+}
 
+// searching same field with multiple mappings
+GET /multi_field_test/_search
+{
+  "query":{
+    "match_all": {}
+  }
+}
+
+// match query
+GET /multi_field_test/_search
+{
+  "query":{
+    "match": {
+      "ingredients":"Spaghetti"
+    }
+  }
+}
+
+// term level  query - using keyword mapping
+GET /multi_field_test/_search
+{
+  "query":{
+    "match": {
+      "ingredients.keyword":"Spaghetti"
+    }
+  }
+}
 
 
 
