@@ -576,3 +576,29 @@ POST /people/_doc
 
 
 
+//61 Dynamic Templates
+//we specify a dynamic template where integer is matched to mapping type log
+PUT /dynamic_template_test
+{
+  "mappings": {
+    "dynamic_templates":[
+      {
+        "integers":{
+          "match_mapping_type":"long",
+          "mapping":{
+            "type":"integer"
+          }
+        }
+      }
+     ]
+  }
+}
+//insert an integer value
+POST /dynamic_template_test/_doc
+{
+  "in_stock":123
+}
+//DISPLAY THE VALUE
+GET /dynamic_template_test/_mapping
+
+
