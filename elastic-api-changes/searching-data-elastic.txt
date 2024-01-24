@@ -71,10 +71,7 @@ GET /products/_search
 {
   "query": {
     "terms":{
-      "tags":{
-        "values":["Soup","meat"],
-        "case_insensitive":true
-      }
+      "tags":["Soup","meat"]
     }
   }
 }
