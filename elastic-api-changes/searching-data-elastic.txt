@@ -1,0 +1,80 @@
+// upload the products-bulk.json manually in kibana web browser
+// get all data
+GET /products/_search
+{
+  "query": {
+    "match_all":{}
+  }
+}
+
+//search term query
+// text search is case sensitive in term query -- shorthand
+GET /products/_search
+{
+  "query": {
+    "term":{
+      "tags":"Vegetable"
+    }
+  }
+}
+
+// text search is case sensitive in term query --explicit
+// but in new versions of elastic api we can use exlicit version with case_insensitive flag
+GET /products/_search
+{
+  "query": {
+    "term":{
+      "tags":{
+        "value":"vegetable",
+        "case_insensitive":true
+      }
+    }
+  }
+}
+
+//boolean search
+GET /products/_search
+{
+  "query": {
+    "term":{
+      "is_active":true
+    }
+  }
+}
+
+//number search
+GET /products/_search
+{
+  "query": {
+    "term":{
+      "in_stock":1
+    }
+  }
+}
+
+//timestamps
+GET /products/_search
+{
+  "query": {
+    "term":{
+      "created":"2010/07/10"
+    }
+  }
+}
+
+// search multiple tags
+// this will below seach tags in an or condition
+// returning items with (soup || meat )
+// when we provide array of values we need to specify
+// terms instead of term
+GET /products/_search
+{
+  "query": {
+    "terms":{
+      "tags":{
+        "values":["Soup","meat"],
+        "case_insensitive":true
+      }
+    }
+  }
+}
