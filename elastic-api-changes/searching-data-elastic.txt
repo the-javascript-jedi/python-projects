@@ -75,3 +75,13 @@ GET /products/_search
     }
   }
 }
+
+//Retrieving documents by IDs
+GET /products/_search
+{
+  "query": {
+    "ids":{
+      "values":["gf5mPI0BZa5H72dXPYNo","g_5mPI0BZa5H72dXPYNo","hf5mPI0BZa5H72dXPYNo"]
+    }
+  }
+}
