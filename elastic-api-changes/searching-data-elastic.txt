@@ -255,3 +255,48 @@ GET /products/_search
   }
 }
 
+GET /products/_search
+{
+  "query": {
+    "wildcard": {
+      "tags": {
+        "value": "Past?"
+      }
+    }
+  }
+}
+
+//full text query -- match
+GET /products/_search
+{
+  "query": {
+    "match": {
+      "name": "PaStA"
+    }
+  }
+}
+
+//Searching for multiple terms
+GET /products/_search
+{
+  "query": {
+    "match": {
+      "name": "PASTA CHICKEN"
+    }
+  }
+}
+
+//Specifying the operator
+//Defaults to or. The below makes both terms required.
+
+GET /products/_search
+{
+  "query": {
+    "match": {
+      "name": {
+        "query": "pasta chicken",
+        "operator": "and"
+      }
+    }
+  }
+}
