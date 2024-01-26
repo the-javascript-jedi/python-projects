@@ -85,3 +85,154 @@ GET /products/_search
     }
   }
 }
+//Basic usage
+//Range search
+GET /products/_search
+{
+  "query": {
+    "range": {
+      "in_stock": {
+        "gte": 2,
+        "lte": 5
+      }
+    }
+  }
+}
+
+GET /products/_search
+{
+  "query": {
+    "range": {
+      "in_stock": {
+        "gt": 1,
+        "lt": 5
+      }
+    }
+  }
+}
+
+//Querying dates
+GET /products/_search
+{
+  "query": {
+    "range": {
+      "created": {
+        "gte": "2015/01/01",
+        "lte": "2015/01/31"
+      }
+    }
+  }
+}
+
+//Specifying the time
+GET /products/_search
+{
+  "query": {
+    "range": {
+      "created": {
+        "gte": "2015/01/01 00:00:00",
+        "lte": "2015/01/31 23:59:59"
+      }
+    }
+  }
+}
+
+//Specifying a UTC offset
+GET /products/_search
+{
+  "query": {
+    "range": {
+      "created": {
+        "time_zone": "+01:00",
+        "gte": "2020/01/01 01:00:00",
+        "lte": "2020/02/01 00:59:59"
+      }
+    }
+  }
+}
+//Specifying a date format
+GET /products/_search
+{
+  "query": {
+    "range": {
+      "created": {
+        "format": "dd/MM/yyyy",
+        "gte": "01/01/2020",
+        "lte": "31/01/2020"
+      }
+    }
+  }
+}
+//wildcard
+GET /products/_search
+{
+  "query": {
+    "prefix": {
+      "name": {
+        "value": "Wine",
+        "case_insensitive":true
+      }
+    }
+  }
+}
+
+//Single character wildcard (?)
+GET /products/_search
+{
+  "query": {
+    "wildcard": {
+      "tags": {
+        "value": "Past?"
+      }
+    }
+  }
+}
+
+//Zero or more characters wildcard (*)
+GET /products/_search
+{
+  "query": {
+    "wildcard": {
+      "tags": {
+        "value": "Bee*"
+      }
+    }
+  }
+}
+
+//Regexp
+GET /products/_search
+{
+  "query": {
+    "regexp": {
+      "tags": {
+        "value": "Bee(f|r)+"
+      }
+    }
+  }
+}
+
+//Case insensitive searches
+//All of the above queries can be made case insensitive by adding the case_insensitive parameter, e.g.:
+
+GET /products/_search
+{
+  "query": {
+    "prefix": {
+      "name": {
+        "value": "Past",
+        "case_insensitive": true
+      }
+    }
+  }
+}
+
+//Querying by field existence
+GET /products/_search
+{
+  "query": {
+    "exists": {
+      "field": "tags"
+    }
+  }
+}
