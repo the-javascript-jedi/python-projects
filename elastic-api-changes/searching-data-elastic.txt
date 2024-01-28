@@ -337,3 +337,57 @@ GET /products/_search
   }
 }
 
+
+//full text query -- match
+//search description page
+GET /products/_search
+{
+  "query": {
+    "match": {
+      //"description": "browse"
+      "name":"mango"
+    }
+  }
+}
+
+//phrase queries
+// no values returned since order is not present in db only 
+// juice - mango is present in db
+GET /products/_search
+{
+  "query" :{
+    "match_phrase": {
+      "name": "mango juice"
+    }
+  }
+}
+
+// eventhough result has Juice - Mango -- analyzer has removed the - and returns the result
+GET /products/_search
+{
+  "query" :{
+    "match_phrase": {
+      "name": "juice mango"
+    }
+  }
+}
+
+//Juice (mango) - > Juice - Mango
+GET /products/_search
+{
+  "query" :{
+    "match_phrase": {
+      "name": "Juice (mango)"
+    }
+  }
+}
+
+// search the desription
+GET /products/_search
+{
+  "query" :{
+    "match_phrase": {
+      "description": "browse the internet"
+    }
+  }
+}
