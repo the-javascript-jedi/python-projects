@@ -599,3 +599,64 @@ GET /products/_search
     }
   }
 }
+
+// Example 2: should match products with the “Beer” tag that have 100 or less items in stock. On top of that, “Beer” should appear within the product name or description.
+
+// Variation #1
+GET /products/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "in_stock": {
+              "lte": 100
+            }
+          }
+        },
+        {
+          "term": {
+            "tags": "Beer"
+          }
+        }
+      ],
+      "should": [
+        { "match": { "name": "Beer" } },
+        { "match": { "description": "Beer" } }
+      ],
+      "minimum_should_match": 1
+    }
+  }
+}
+
+//variation 2
+GET /products/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "in_stock": {
+              "lte": 100
+            }
+          }
+        },
+        {
+          "term": {
+            "tags": "Beer"
+          }
+        }
+      ],
+      "must": [
+        {
+          "multi_match": {
+            "query": "Beer",
+            "fields": ["name", "description"]
+          }
+        }
+      ]
+    }
+  }
+}
