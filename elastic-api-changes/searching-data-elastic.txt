@@ -382,12 +382,220 @@ GET /products/_search
   }
 }
 
-// search the desription
+// search the description
 GET /products/_search
 {
   "query" :{
     "match_phrase": {
       "description": "browse the internet"
+    }
+  }
+}
+
+//Querying with boolean logic
+//must -- Query clauses added within the must occurrence type are required to match.
+GET /products/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "tags": "Alcohol"
+          }
+        }
+      ]
+    }
+  }
+}
+
+//must_not -- Query clauses added within the must_not occurrence type are required to not match.
+GET /products/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "tags": "Alcohol"
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "term": {
+            "tags": "Wine"
+          }
+        }
+      ]
+    }
+  }
+}
+
+// should -- Matching query clauses within the should occurrence type boost a matching document's relevance score.
+GET /products/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "tags": "Alcohol"
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "term": {
+            "tags": "Wine"
+          }
+        }
+      ],
+      "should": [
+        {
+          "term": {
+            "tags": "Beer"
+          }
+        }
+      ]
+    }
+  }
+}
+
+// An example with a few more adding more should query clauses:
+GET /products/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "tags": "Alcohol"
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "term": {
+            "tags": "Wine"
+          }
+        }
+      ],
+      "should": [
+        {
+          "term": {
+            "tags": "Beer"
+          }
+        },
+        {
+          "match": {
+            "name": "beer"
+          }
+        },
+        {
+          "match": {
+            "description": "beer"
+          }
+        }
+      ]
+    }
+  }
+}
+
+//filter
+//Query clauses defined within the filter occurrence type must match. This is similar to the must occurrence type. The difference is that filter query clauses do not affect relevance scores and may be cached.
+GET /products/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "term": {
+            "tags": "Alcohol"
+          }
+        }
+      ]
+    }
+  }
+}
+//match queries are actually translated into bool queries under the hood.
+
+//match query
+GET /products/_search
+{
+  "query":
+  {
+    "match":{
+      "name":"PASTA"
+    }
+  }
+}
+
+//bool query
+GET /products/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "name": "pasta"
+          }
+        }
+      ]
+    }
+  }
+}
+
+//Examples
+//Example 1--find products that have 100 or less items in stock. On top of that, they should be tagged with “Beer” or contain “Beer” within their names.
+//variation 1 -- the first version requires anyone reading it to know that at least one of the should clauses are implicitly required.
+GET /products/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "in_stock": {
+              "lte": 100
+            }
+          }
+        }
+      ],
+      "must": [
+        {
+          "bool": {
+            "should": [
+              { "term": { "tags": "Beer" } },
+              { "match": { "name": "Beer" } }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
+
+//variation 2 --the second approach is easier to understand. It’s also more explicit
+GET /products/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "in_stock": {
+              "lte": 100
+            }
+          }
+        }
+      ],
+      "should": [
+        { "term": { "tags": "Beer" } },
+        { "match": { "name": "Beer" } }
+      ],
+      "minimum_should_match": 1
     }
   }
 }
