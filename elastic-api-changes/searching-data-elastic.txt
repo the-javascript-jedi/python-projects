@@ -660,3 +660,61 @@ GET /products/_search
     }
   }
 }
+
+//Boosting Query
+//Matching juice products
+
+GET /products/_search
+{
+  "size": 20,
+  "query": {
+    "match": {
+      "name": "juice"
+    }
+  }
+}
+
+//Match juice products, but deprioritize apple juice
+// negative_boost - This parameter defines a floating point number between 0 and 
+//  1.0. This number is used as a modifier for documents that match the negative query clause.
+// In this example we searched for juice products and decreased the relevance of apple juice.
+GET /products/_search
+{
+  "size": 20,
+  "query": {
+    "boosting": {
+      "positive": {
+        "match": {
+          "name": "juice"
+        }
+      },
+      "negative": {
+        "match": {
+          "name": "apple"
+        }
+      },
+      "negative_boost": 0.5
+    }
+  }
+}
+
+//
+//Without filtering (deprioritize everything apples)
+
+GET /products/_search
+{
+  "query": {
+    "boosting": {
+      "positive": {
+        "match_all": {}
+      },
+      "negative": {
+        "match": {
+          "name": "apple"
+        }
+      },
+      "negative_boost": 0.5
+    }
+  }
+}
+
