@@ -718,3 +718,125 @@ GET /products/_search
   }
 }
 
+// More Examples
+//Example 1 - "I like pasta"
+//Boost the relevance scores for pasta products.
+GET /recipes/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        { "match_all": {} }
+      ], 
+      "should": [
+        {
+          "term": {
+            "ingredients.name.keyword": "Pasta"
+          }
+        }
+      ]
+    }
+  }
+}
+
+//Example 2 -- "I don't like bacon"
+//Reduce the relevance scores for bacon products.
+
+GET /recipes/_search
+{
+  "query": {
+    "boosting": {
+      "positive": {
+        "match_all": {}
+      },
+      "negative": {
+        "term": {
+          "ingredients.name.keyword": "Bacon"
+        }
+      },
+      "negative_boost": 0.5
+    }
+  }
+}
+
+//Example 3 -- Pasta products, preferably without bacon
+GET /recipes/_search
+{
+  "query": {
+    "boosting": {
+      "positive": {
+        "term": {
+          "ingredients.name.keyword": "Pasta"
+        }
+      },
+      "negative": {
+        "term": {
+          "ingredients.name.keyword": "Bacon"
+        }
+      },
+      "negative_boost": 0.5
+    }
+  }
+}
+
+//Example 4 -- "I like pasta, but not bacon"
+GET /recipes/_search
+{
+  "query": {
+    "boosting": {
+      "positive": {
+        "bool": {
+          "must": [
+            { "match_all": {} }
+          ],
+          "should": [
+            {
+              "term": {
+                "ingredients.name.keyword": "Pasta"
+              }
+            }
+          ]
+        }
+      },
+      "negative": {
+        "term": {
+          "ingredients.name.keyword": "Bacon"
+        }
+      },
+      "negative_boost": 0.5
+    }
+  }
+}
+
+
+//Disjunction max (dis_max)
+//Basic usage
+
+GET /products/_search
+{
+  "query": {
+    "dis_max": {
+      "queries": [
+        { "match": { "name": "vegetable" } },
+        { "match": { "tags": "vegetable" } }
+      ]
+    }
+  }
+}
+
+//Specifying a tie breaker
+GET /products/_search
+{
+  "query": {
+    "dis_max": {
+      "queries": [
+        { "match": { "name": "vegetable" } },
+        { "match": { "tags": "vegetable" } }
+      ],
+      "tie_breaker": 0.3
+    }
+  }
+}
+
+
+
