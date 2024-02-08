@@ -1,0 +1,36 @@
+GET /_search 
+{ "query": 
+  { "term": 
+    { "agent": 
+      { "value": "mozilla", "boost": 1.0 } 
+    } 
+  } 
+}
+
+# bool query -- compound query
+# add explain = true to get scoring explanation
+GET documents-books-v1/_search?explain=false
+{
+  "_source": ["title", "description"],
+  "query": {
+    "bool": {
+      "must": [
+        {
+            "term": {
+              "description": {
+                "value": "javascript"
+              }
+            }
+          },
+          {
+            "term": {
+              "title": {
+                "value": "javascript",
+                "boost":100
+              }
+            }
+        }
+      ]
+  }
+}
+}
