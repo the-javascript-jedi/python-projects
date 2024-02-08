@@ -1,0 +1,112 @@
+GET _cat/indices?v&s=index
+
+# Search command - separate index
+GET mylogs-apache-v1-2022.08.10/_search
+
+# Search command - wildcard index
+GET mylogs-apache-v1-*/_search
+
+#search in web browser
+#http://localhost:9200/mylogs-apache-v1-*/_search?pretty
+
+# Search command - params with pagination
+# show from page 0 to 5 documents
+GET mylogs-apache-v1-*/_search?size=5&from=0
+
+# show from page 100 to 105 documents
+GET mylogs-apache-v1-*/_search?size=5&from=100
+
+#search by value in query
+#q=fieldname:value
+GET mylogs-apache-v1-*/_search?size=5&from=0&q=agent:mozilla
+
+#search api request body
+#display all
+POST mylogs-apache-v1*/_search
+{
+"_source": [
+],
+"query": {
+  "match_all": {}
+},
+"from": 0,
+"size": 50
+}
+
+# display using term query
+# track_total_hits - is more costly to execute but gives accurate count of hits
+POST mylogs-apache-v1*/_search
+{
+"_source": [
+],
+"track_total_hits": true, 
+"query": {
+  "term": {
+    "agent":{
+      "value":"mozilla"
+    }
+  }
+},
+"from": 0,
+"size": 50
+}
+
+#instead of track_toal_hits - we can send the count of files
+POST mylogs-apache-v1*/_count
+{
+"query": {
+  "term": {
+    "agent":{
+      "value":"mozilla"
+    }
+  }
+}
+}
+
+#track_total_hits using query
+GET mylogs-apache-v1-*/_search?size=5&from=0&q=agent:mozilla&track_total_hits=true
+
+# sort the data
+POST mylogs-apache-v1*/_search
+{
+  "query": {
+    "term": {
+      "agent":{
+        "value":"mozilla"
+      }
+    }
+  },
+  "sort":[
+    {
+      "bytes":{
+        "order":"desc"
+      }
+    }
+  ],
+"from": 0,
+"size": 50
+}
+
+#include only part of the necessary json 
+POST mylogs-apache-v1*/_search
+{
+  "_source": {
+    "includes": ["agent","request","verb"]
+  }, 
+  "query": {
+    "term": {
+      "agent":{
+        "value":"mozilla"
+      }
+    }
+  },
+  "sort":[
+    {
+      "bytes":{
+        "order":"desc"
+      }
+    }
+  ],
+"from": 0,
+"size": 50
+}
