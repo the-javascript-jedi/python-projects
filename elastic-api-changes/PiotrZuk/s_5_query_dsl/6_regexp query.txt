@@ -1,0 +1,28 @@
+#insert data in bulk for testing
+POST _bulk
+{ "index" : { "_index" : "browsers-v1"} }
+{ "agent" : "Phoenix 0.5" }
+{ "index" : { "_index" : "browsers-v1"} }
+{ "agent" : "Opera 10.5" }
+{ "index" : { "_index" : "browsers-v1"} }
+{ "agent" : "Mozilla 9" }
+{ "index" : { "_index" : "browsers-v1"} }
+{ "agent" : "Firefox 15" }
+{ "index" : { "_index" : "browsers-v1"} }
+{ "agent" : "Chromium 2023" }
+{ "index" : { "_index" : "browsers-v1"} }
+{ "agent" : "Chrome 26" }
+
+#Elasticsearch keeps documents in the write cache, in the node, and put the data on the shards on the disk not often than 1 second. Refresh forces Elasticsearch to copy the data from the memory into the disk.
+GET browsers-v1/_refresh
+
+#use rege in elastic search
+POST browsers-v1/_search
+{
+  "_source": ["agent"], 
+  "query": {
+    "regexp": {
+      "agent": "chrom[ie]+.*|[a-z]{6}x"
+    }
+  }
+}

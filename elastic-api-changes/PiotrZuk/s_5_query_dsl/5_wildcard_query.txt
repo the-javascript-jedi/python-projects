@@ -1,0 +1,203 @@
+POST mylogs-apache-v1*/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "bytes": {
+              "gte": 4000,
+              "lte": 5000
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+POST mylogs-apache-v1*/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "bytes": {
+              "gte": 4000,
+              "lte": 5000
+            }
+          }
+        },
+        {
+          "range": {
+            "@timestamp": {
+              "gte": "2022-08-10T21:47:01.000Z",
+              "lte": "2022-08-10T21:57:01.000Z"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+POST mylogs-apache-v1*/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "bytes": {
+              "gte": 4000,
+              "lte": 5000
+            }
+          }
+        },
+        {
+          "range": {
+            "@timestamp": {
+              "gte": "now-2y/d",
+              "lte": "now/d"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+POST mylogs-apache-v2*/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "bytes": {
+              "gte": 4000,
+              "lte": 5000
+            }
+          }
+        },
+        {
+          "range": {
+            "@timestamp": {
+              "gte": "now-1y/d",
+              "lte": "now/d"
+            }
+          }
+        },
+        {
+          "range": {
+            "clientip": {
+              "gte": "6.13.17.170",
+              "lte": "6.13.80.255"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+
+POST mylogs-apache-v1*/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "@timestamp": {
+              "gte": "2022-08-10T21:47:01.000Z",
+              "lte": "2022-08-10T21:57:01.000Z",
+              "format": "dd/MM/yyyy"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+PUT vacations-calendar-v1
+{
+  "mappings": {
+    "properties": {
+      "employee" : { "type": "text" },
+      "vacation" : {
+        "type": "date_range"
+      }
+    }
+  }
+}
+
+
+POST vacations-calendar-v1/_doc
+{
+    "employee" : "Mat",
+    "vacation" : {"gte":"2020-01-04", "lte":"2020-01-07"}
+}
+
+POST vacations-calendar-v1/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "vacation": {
+              "gte": "2020-01-05",
+              "lte": "2020-01-10",
+              "relation" : "INTERSECTS"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+
+POST test-range-relation-v1/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "timestamp": {
+              "gte": "2020-01-03",
+              "lte": "2020-01-08",
+              "relation" : "WITHIN"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+
+POST test-range-relation-v1/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "timestamp": {
+              "gte": "2020-01-05",
+              "lte": "2020-01-06",
+              "relation" : "CONTAINS"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+
