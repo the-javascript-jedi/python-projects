@@ -110,3 +110,121 @@ POST documents-books-v1/_search
     }
   }
 }
+
+# i)sort without bool – we need to manually sort by score
+#sort is placed outside query
+POST documents-books-v1/_search
+{
+  "query":{
+    "bool":{
+      "must":[
+        {
+          "term":{
+            "description":{
+              "value": "javascript"
+            }
+          }
+        },
+        {
+          "term":{
+            "subtitle":{
+              "value":"web"
+            }
+          }
+        }
+      ],
+      "filter":[
+        {
+          "range":{
+            "published":{
+              "gte":"2012-07-01T00:06:02.000000Z",
+              "lte":"2023-12-31T00:06:02.000000Z"
+            }
+          }
+        }],
+      "must_not": [
+          {
+            "term": {
+              "description": {
+                "value": "experience"
+              }
+            }
+          }
+        ]
+     
+    }
+  },
+  "sort":[
+        {
+          "instock":{
+            "order":"desc"
+          }
+        },
+        {
+          "_score":{
+            "order":"desc"
+          }
+        }
+      ]
+}
+
+# ii)sort using should – we do not need to specify the score sort
+POST documents-books-v1/_search
+{
+  "query":{
+    "bool":{
+      "must":[
+        {
+          "term":{
+            "description":{
+              "value": "javascript"
+            }
+          }
+        },
+        {
+          "term":{
+            "subtitle":{
+              "value":"web"
+            }
+          }
+        }
+      ],
+      "filter":[
+        {
+          "range":{
+            "published":{
+              "gte":"2012-07-01T00:06:02.000000Z",
+              "lte":"2023-12-31T00:06:02.000000Z"
+            }
+          }
+        }],
+      "must_not": [
+          {
+            "term": {
+              "description": {
+                "value": "experience"
+              }
+            }
+          }
+        ],
+      "should": [
+        {
+          "term":{
+            "instock": {
+              "value": "true",
+              "boost":200
+            }
+          }
+        }, {
+          "term":{
+            "title": {
+              "value": "spiderman"
+            }
+          }
+        }
+      ],
+      "minimum_should_match": 1
+     
+    }
+  }
+}
