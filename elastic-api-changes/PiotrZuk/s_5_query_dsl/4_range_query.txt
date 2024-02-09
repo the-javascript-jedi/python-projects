@@ -1,0 +1,53 @@
+#range query
+POST mylogs-apache-v2-*/_search
+{
+  "query":{
+    "bool":{
+      "filter":[
+        {
+          "range":{
+            "bytes":{
+              "gte":4000,
+              "lte":5000
+            }
+          }
+        },{
+          "range":{
+            "@timestamp":{
+              "gte":"2022-08-10T21:47:01.000Z",
+              "lte":"2022-08-10T21:57:01.000Z"
+              
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+#search for logs for last 2 years
+POST mylogs-apache-v2-*/_search
+{
+  "query":{
+    "bool":{
+      "filter":[
+        {
+          "range":{
+            "bytes":{
+              "gte":4000,
+              "lte":5000
+            }
+          }
+        },{
+          "range":{
+            "@timestamp":{
+              "gte":"now-2y/d",
+              "lte":"now/d"
+              
+            }
+          }
+        }
+      ]
+    }
+  }
+}
