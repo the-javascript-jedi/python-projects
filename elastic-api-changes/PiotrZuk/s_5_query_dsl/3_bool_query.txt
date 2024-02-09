@@ -1,0 +1,112 @@
+# bool query commands
+
+#In below example range is searched inside “must” so score is affected
+POST documents-books-v1/_search
+{
+  "query":{
+    "bool":{
+      "must":[
+        {
+          "term":{
+            "description":{
+              "value": "javascript"
+            }
+          }
+        },
+        {
+          "term":{
+            "subtitle":{
+              "value":"web"
+            }
+          }
+        },
+        {
+          "range":{
+            "published":{
+              "gte":"2012-07-01T00:06:02.000000Z",
+              "lte":"2023-12-31T00:06:02.000000Z"
+            }
+          }
+        }
+      ],
+      "filter":[]
+    }
+  }
+}
+
+#In below example range is searched inside “filter” so score is not affected
+POST documents-books-v1/_search
+{
+  "query":{
+    "bool":{
+      "must":[
+        {
+          "term":{
+            "description":{
+              "value": "javascript"
+            }
+          }
+        },
+        {
+          "term":{
+            "subtitle":{
+              "value":"web"
+            }
+          }
+        }
+      ],
+      "filter":[
+        {
+          "range":{
+            "published":{
+              "gte":"2012-07-01T00:06:02.000000Z",
+              "lte":"2023-12-31T00:06:02.000000Z"
+            }
+          }
+        }]
+    }
+  }
+}
+
+#must_not
+POST documents-books-v1/_search
+{
+  "query":{
+    "bool":{
+      "must":[
+        {
+          "term":{
+            "description":{
+              "value": "javascript"
+            }
+          }
+        },
+        {
+          "term":{
+            "subtitle":{
+              "value":"web"
+            }
+          }
+        }
+      ],
+      "filter":[
+        {
+          "range":{
+            "published":{
+              "gte":"2012-07-01T00:06:02.000000Z",
+              "lte":"2023-12-31T00:06:02.000000Z"
+            }
+          }
+        }],
+        "must_not": [
+          {
+            "term": {
+              "description": {
+                "value": "experience"
+              }
+            }
+          }
+        ]
+    }
+  }
+}
