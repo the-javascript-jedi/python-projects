@@ -1,0 +1,90 @@
+# Match query runs default analyzer so even small case and title case will work
+GET mylogs-apache-v1-2022.08.10/_search
+{
+  "query": {
+    "term": {
+      "agent": {
+        "value": "mozilla"
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v1-2022.08.10/_search
+{
+  "query": {
+    "match": {
+      "agent": {
+        "query": "Mozilla"
+      }
+    }
+  }
+}
+# we set the default analyzer
+GET mylogs-apache-v1-2022.08.10/_search
+{
+  "query": {
+    "match": {
+      "agent": {
+        "query": "Mozilla",
+        "analyzer": "default"
+      }
+    }
+  }
+}
+
+GET mylogs-apache-v1-2022.08.10/_search
+{
+  "query": {
+    "match": {
+      "agent": {
+        "query": "Mozilla Gecko/45",
+        "analyzer": "default"
+      }
+    }
+  }
+}
+# change the operator to and
+GET mylogs-apache-v1-2022.08.10/_search
+{
+  "query": {
+    "match": {
+      "agent": {
+        "query": "Mozilla Gecko/45",
+        "analyzer": "default",
+        "operator": "and"
+      }
+    }
+  }
+}
+#replica of match query using the bool query
+GET mylogs-apache-v1-2022.08.10/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "agent": {
+              "value": "mozilla"
+            }
+          }
+        },
+        {
+          "term": {
+            "agent": {
+              "value": "gecko"
+            }
+          }
+        },
+        {
+          "term": {
+            "agent": {
+              "value": "45"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
