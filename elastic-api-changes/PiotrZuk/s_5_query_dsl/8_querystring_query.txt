@@ -1,0 +1,104 @@
+#query string query
+#we get parse exception when running below query since and operator is not specified
+GET mylogs-apache-v1-*/_search
+{
+  "query": {
+    "query_string": {
+      "query": "Mozilla Gecko/45",
+      "default_field": "agent"
+    }
+  }
+}
+
+# below query - we replace the search terms with query string and operators(AND)
+#QueryString parses the input phrase, then run analyzer for each split text, like Mozilla, Gecko, and Kong, and finally executed bool query behind the scene.
+GET mylogs-apache-v1-*/_search
+{
+  "query": {
+    "query_string": {
+      "query": "(Mozilla AND Gecko) KONG",
+      "default_field": "agent"
+    }
+  }
+}
+
+#identical bool query using query string
+GET mylogs-apache-v1-*/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "agent": {
+              "value": "mozilla"
+            }
+          }
+        },
+        {
+          "term": {
+            "agent": {
+              "value": "gecko"
+            }
+          }
+        },
+        {
+          "term": {
+            "agent": {
+              "value": "45"
+            }
+          }
+        }
+      ],
+      "should": [
+      
+      ]
+    }
+  }
+}
+
+# using query string in multiple fields
+GET mylogs-apache-v1-*/_search
+{
+  "query": {
+    "query_string": {
+      "query": "(Mozilla AND Gecko) KONG",
+      "fields" : ["agent", "geoip.city_name"]
+    }
+  }
+}
+#query fields example 2
+GET mylogs-apache-v1-*/_search
+{
+  "query": {
+    "query_string": {
+      "query": "(Mozilla AND Gecko) MADRID",
+      "fields" : ["agent", "geoip.city_name"],
+      "default_operator": "AND"
+    }
+  }
+}
+#using wildcards - use allow leading wildcard
+GET mylogs-apache-v1-*/_search
+{
+  "query": {
+    "query_string": {
+      "query": "(*ozilla AND *ecko) *ONG",
+      "fields" : ["agent", "geoip.city_name"],
+      "allow_leading_wildcard": true
+    }
+  }
+}
+
+#sentence search
+# terms must be in following order, like Mozilla, 5.0 , Windows, NT.
+GET mylogs-apache-v1-*/_search
+{
+  "query": {
+    "query_string": {
+      "query": "\"Mozilla 5.0 Windows NT \"",
+      "default_operator": "OR",
+      "fields" : ["agent"]
+    }
+  }
+}
