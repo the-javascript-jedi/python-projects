@@ -8,6 +8,10 @@ def hello_world():
     # return "<p>Hello, World! I want to go to America</p>"
     return render_template('index.html')
 
+@app.route("/<username>")
+def username(username=None):
+    return render_template('index.html', name=username)
+
 @app.route("/about.html")
 def about():
     return render_template('about.html')
