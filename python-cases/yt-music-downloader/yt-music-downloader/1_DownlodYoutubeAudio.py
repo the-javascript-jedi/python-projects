@@ -68,4 +68,4 @@ if __name__ == "__main__":
     output_directory = r'C:\Users\user\Desktop\FC25'  # Specify the path where you want the files
 
     # Call the download function, starting from the 30th file
-    download_playlist(playlist_url, output_directory, start_index=30, cookies_file="cookies.txt")
+    download_playlist(playlist_url, output_directory, start_index=0, cookies_file="cookies.txt")
