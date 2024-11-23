@@ -12,8 +12,16 @@ def update_metadata(mp3_file, title=None, contributing_artists=None, album_artis
         audio_file.tag.title = title
     if contributing_artists:
         audio_file.tag.artist = contributing_artists
+    else:
+        # Set both album_artist and contributing_artists to "Lola" if empty
+        audio_file.tag.artist = "Lola"
+
     if album_artist:
         audio_file.tag.album_artist = album_artist
+    else:
+        # Set album_artist to "Lola" if empty
+        audio_file.tag.album_artist = "Lola"
+
     if album:
         audio_file.tag.album = album
     if genre:
@@ -36,15 +44,20 @@ def parse_title_and_artist(filename):
 
     # Find the position of the dash and the (FC25 SOUNDTRACK)
     if ' - ' in filename:
-        title_part = filename.split(' - ')[0]  # Before the dash
-        artist_part = filename.split(' - ')[1]  # After the dash
+        artist_part = filename.split(' - ')[0]  # Before the dash
+        title_part = filename.split(' - ')[1]  # After the dash
 
-        # Remove "(FC25 SOUNDTRACK)" from the artist part
+        # Remove "(FC25 SOUNDTRACK)" from the artist part if it exists
         contributing_artists = artist_part.split(' (')[0].strip()  # Take everything before "(FC25 SOUNDTRACK)"
+
+        # If contributing artist is empty, return "Lola"
+        if not contributing_artists:
+            contributing_artists = "Lola"
 
         return title_part, contributing_artists
     else:
-        return filename, ""  # If no dash, use filename as title and no contributing artist
+        # If no dash, use filename as title and empty contributing artist
+        return filename, "Lola"
 
 
 def update_folder_metadata(folder_path, album_artist, album, year, genre):
@@ -77,10 +90,10 @@ if __name__ == "__main__":
     folder_path = r'C:\Users\user\Desktop\FC25\mp3'  # Use the provided folder path
 
     # Define the metadata to update
-    album_artist = "EA Trax"
-    album = "FC25"
-    year = 2025
-    genre = "Game"  # Updated Genre to "Game"
+    album_artist = "Lofi by Lola"
+    album = "Sunset LoFi by Lola"
+    year = 2024
+    genre = "YouTube Rips"  # Updated Genre to "Game"
 
     # Call the function to update all MP3 files in the folder
     update_folder_metadata(folder_path, album_artist, album, year, genre)
