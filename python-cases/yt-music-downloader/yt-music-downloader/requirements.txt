@@ -1,0 +1,3 @@
+pydub
+yt_dlp
+eyed3
