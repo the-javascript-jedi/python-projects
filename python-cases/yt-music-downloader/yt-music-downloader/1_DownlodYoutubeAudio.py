@@ -64,8 +64,8 @@ def download_playlist(playlist_url, output_directory, start_index=30, cookies_fi
 
 if __name__ == "__main__":
     # Enter the playlist URL and the directory where you want to save the MP3 files
-    playlist_url = 'https://www.youtube.com/playlist?list=PLdIIZ1dpb9fe9y8XXNi22Gce3E86cZQG2'
-    output_directory = r'C:\Users\user\Desktop\FC25'  # Specify the path where you want the files
+    playlist_url = 'https://www.youtube.com/watch?v=h9GL75AzrWQ&list=PLP_LcnuF3YFn06_WTdtSqZ6y_mnPb3NAn'
+    output_directory = r'C:\Users\user\Desktop\FC26'  # Specify the path where you want the files
 
     # Call the download function, starting from the 30th file
     download_playlist(playlist_url, output_directory, start_index=0, cookies_file="cookies.txt")

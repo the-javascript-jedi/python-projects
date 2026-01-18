@@ -16,8 +16,8 @@ def replace_text():
         return
 
     # Define arrays for find and replace
-    findText = ["aa", "aa-bb", "hello", "world"]
-    replacementText = ["cc", "test-dd", "hi", "earth"]
+    findText = ["selfinstall", "self-install", "charter", "spectrum","xumo"]
+    replacementText = ["sondavellai", "sonda-vellai", "vanavil", "manaooruthi","bono"]
 
     # Validate arrays have same length
     if len(findText) != len(replacementText):
